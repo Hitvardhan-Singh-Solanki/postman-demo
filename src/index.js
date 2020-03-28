@@ -3,11 +3,15 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import passport from 'passport';
+import mongoose from 'mongoose';
 import { Strategy } from 'passport-google-oauth2';
 import { matchRoutes } from 'react-router-config';
 import renderer from './helpers/renderer';
 import createStore from './helpers/createStore';
 import routes from './client/routes';
+import User from './schemas/User';
+
+const MONGO_URI = `mongodb+srv://hitvardhan:HXUlABphtG9OoMyN@cluster0-zi6lx.mongodb.net/test?retryWrites=true&w=majority`;
 
 passport.use(
   new Strategy(
@@ -36,10 +40,17 @@ app.get('/api/*', (req, res) => {
   res.send('test');
 });
 app.post('/api/auth', (req, res) => {
-  passport.authenticate('google', {
-    successRedirect: '/auth/google/success',
-    failureRedirect: '/auth/google/failure'
+  let chris = new User({
+    name: 'Chris',
+    email: 'test@gmail.com',
+    username: 'sevilayha',
+    password: 'password'
   });
+  chris.save(err => {
+    if (err) console.log(err);
+    console.log('User saved successfully!');
+  });
+
   res.send('test');
 });
 app.get('*', (req, res) => {
@@ -52,5 +63,13 @@ app.get('*', (req, res) => {
   });
 });
 app.listen(3000, () => {
-  console.log(`App listening on PORT 3000`);
+  mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+  var db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', () => {
+    console.log(`App listening on PORT 3000`);
+  });
 });
