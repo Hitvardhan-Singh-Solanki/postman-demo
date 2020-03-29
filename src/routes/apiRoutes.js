@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import authRoutes from './authRoutes';
 import protectedRoutes from './protectedRoutes';
-// import withAuth from '../middlewares/withAuth';
 import auth from '../config/auth';
 
 const apiRouter = Router();

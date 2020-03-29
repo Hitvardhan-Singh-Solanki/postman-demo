@@ -1,8 +1,5 @@
 import { Router } from 'express';
 import User from '../schemas/User';
-import jwt from 'jsonwebtoken';
-import { secret } from '../utils/constants';
-import withAuth from '../middlewares/withAuth';
 import passport from 'passport';
 import auth from '../config/auth';
 
@@ -25,7 +22,11 @@ authRoutes
         if (err) {
           return next(err);
         }
-        return res.sendStatus(200);
+
+        return res.status(200).send({
+          email: user.email,
+          id: user._id
+        });
       });
     })(req, res, next);
   });
@@ -37,9 +38,6 @@ authRoutes
   })
   .post(({ body: { email, password } }, res) => {
     const user = new User({ email: email, password });
-
-    console.log(user);
-
     user.save(err => {
       if (err) {
         res.status(500).json({
