@@ -2,6 +2,7 @@ import { Router } from 'express';
 import User from '../schemas/User';
 import passport from 'passport';
 import auth from '../config/auth';
+import { userResponsObject } from '../utils/index';
 
 const authRoutes = Router();
 
@@ -16,17 +17,14 @@ authRoutes
         return next(err);
       }
       if (!user) {
-        return res.sendStatus(402);
+        return res.status(404).json({ error: 'User not found' });
       }
       req.logIn(user, function(err) {
         if (err) {
           return next(err);
         }
 
-        return res.status(200).send({
-          email: user.email,
-          id: user._id
-        });
+        return res.status(200).send(userResponsObject(user));
       });
     })(req, res, next);
   });
@@ -58,7 +56,7 @@ authRoutes.route('/logout').get((req, res, next) => {
 authRoutes
   .route('/check-token')
   .get(auth.ensureAuthenticated, function(req, res) {
-    res.status(200).send('token valid');
+    res.status(200).json(userResponsObject(req.user));
   });
 
 export default authRoutes;
