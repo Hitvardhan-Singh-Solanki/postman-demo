@@ -1,15 +1,23 @@
-import io from 'socket.io';
+import socketio from 'socket.io';
 import http from 'http';
 
-export default expressApp => {
+const MAIN_ROOM = 'MAIN_ROOM';
+
+export default (expressApp, sessionMiddleware) => {
   const server = http.createServer(expressApp);
-  const socket = io(server, { serveClient: false });
-  socket.on('connection', newSocket => {
-    console.log('New client connected');
-    newSocket.on('message', msg => {
-      console.log(msg);
+  const io = socketio(server, { serveClient: false });
+  io.use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+  }).on('connection', socket => {
+    socket.on('join', () => {
+      const user = socket.request.session.passport.user;
+      socket.join(MAIN_ROOM);
+      socket.emit('joined', {
+        text: `Welcome to the ${MAIN_ROOM}`
+      });
+      socket.broadcast.to(MAIN_ROOM).emit('USER_JOINED', { user });
     });
-    newSocket.on('disconnect', () => console.log('Client disconnected'));
+    socket.on('disconnect', () => {});
   });
   return server;
 };

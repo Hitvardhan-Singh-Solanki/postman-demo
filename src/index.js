@@ -29,17 +29,19 @@ passportConfig(passport);
 
 const app = express();
 
-const server = socket(app);
+const expressSession = session(sessionOptions);
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session(sessionOptions));
+app.use(expressSession);
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 // Cookie parser
 app.use(cookieParser());
 app.use(headers);
+
 app.use('/api', apiRoutes);
+const server = socket(app, expressSession);
 server.listen(PORT, mongoConnect);

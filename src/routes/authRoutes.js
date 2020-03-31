@@ -35,7 +35,11 @@ authRoutes
     res.status(405).send('not allowed');
   })
   .post(({ body: { email, password } }, res) => {
-    const user = new User({ email: email, password });
+    const user = new User({
+      email: email,
+      password,
+      image: `https://img.icons8.com/color/96/000000/circled-user-male-skin-type-4.png`
+    });
     user.save(err => {
       if (err) {
         res.status(500).json({
