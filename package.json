@@ -7,6 +7,7 @@
     "dev:server": "nodemon build/bundle.js --watch build",
     "dev:build": "webpack --config webpack.server.js --watch",
     "dev": "npm-run-all --parallel dev:*",
+    "heroku-prebuild": "npm i webpack -g",
     "build": "webpack --config webpack.server.js",
     "start": "node build/bundle.js"
   },
