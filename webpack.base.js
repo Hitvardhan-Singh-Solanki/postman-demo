@@ -1,5 +1,5 @@
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   devServer: {
     contentBase: './build',
     hot: true
@@ -19,7 +19,8 @@ module.exports = {
                   browsers: ['last 2 versions']
                 }
               }
-            ]
+            ],
+            '@babel/preset-react'
           ],
           plugins: ['@babel/plugin-proposal-class-properties']
         }
