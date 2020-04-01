@@ -3,6 +3,7 @@ import User from '../schemas/User';
 import passport from 'passport';
 import auth from '../config/auth';
 import { userResponsObject } from '../utils/index';
+import { visitorsList } from '../sockets/visited';
 
 const authRoutes = Router();
 
@@ -19,7 +20,7 @@ authRoutes
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
-      req.logIn(user, function(err) {
+      req.logIn(user, err => {
         if (err) {
           return next(err);
         }
@@ -57,10 +58,12 @@ authRoutes.route('/logout').get((req, res, next) => {
   res.sendStatus(200);
 });
 
-authRoutes
-  .route('/check-token')
-  .get(auth.ensureAuthenticated, function(req, res) {
-    res.status(200).json(userResponsObject(req.user));
-  });
+authRoutes.route('/check-token').get(auth.ensureAuthenticated, (req, res) => {
+  res.status(200).json(userResponsObject(req.user));
+});
+
+authRoutes.route('/history').get(auth.ensureAuthenticated, (req, res) => {
+  res.status(200).json(visitorsList());
+});
 
 export default authRoutes;
