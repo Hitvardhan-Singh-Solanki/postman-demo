@@ -1,39 +1,52 @@
 import 'babel-polyfill';
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
-import passport from 'passport';
 import cors from 'cors';
-import { matchRoutes } from 'react-router-config';
-import renderer from './helpers/renderer';
-import createStore from './helpers/createStore';
+import cookieParser from 'cookie-parser';
 import apiRoutes from './routes/apiRoutes';
-import routes from './client/routes';
 import mongoConnect from './helpers/mongoConnect';
-import { PORT } from './utils/constants';
+import { ORIGIN } from './utils/constants';
+import passport from 'passport';
+import passportConfig from './config/passport';
+import socket from './config/socket';
+import headers from './middlewares/headers';
 
-var corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200
+const corsOptions = {
+  origin: ORIGIN,
+  optionsSuccessStatus: 200,
+  credentials: true
 };
 
+const sessionOptions = {
+  secret: process.env.SECRET,
+  resave: true,
+  saveUninitialized: true
+};
+
+// configuring passport
+passportConfig(passport);
+
 const app = express();
-app.use(express.static('public'));
+
+const expressSession = session(sessionOptions);
+
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session({ secret: 'secret', resave: true, saveUninitialized: true }));
+app.use(expressSession);
+// Passport middleware
 app.use(passport.initialize());
+app.use(passport.session());
+// Cookie parser
+app.use(cookieParser());
+app.use(headers);
+
 app.use('/api', apiRoutes);
-
-app.get('*', (req, res) => {
-  const store = createStore();
-  const promiseArr = matchRoutes(routes, req.path).map(({ route }) => {
-    if (route.loadData) return route.loadData(store);
-  });
-  Promise.all(promiseArr).then(() => {
-    res.send(renderer(req, store));
-  });
+app.get('/', (req, res) => {
+  res.send('Welcome to postman');
 });
-
-app.listen(PORT, mongoConnect);
+const server = socket(app, expressSession);
+server.listen(process.env.PORT, mongoConnect);
