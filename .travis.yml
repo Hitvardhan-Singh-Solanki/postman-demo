@@ -3,4 +3,4 @@ node_js:
   - 'stable'
 before_script:
   - npm install -g webpack-cli
-script: npm start
+script: npm run prod:build
