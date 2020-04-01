@@ -1,5 +1,5 @@
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   devServer: {
     contentBase: './build',
     hot: true
@@ -12,19 +12,17 @@ module.exports = {
         exclude: /node_modules/,
         options: {
           presets: [
-            'es2015',
-            'react',
-            'stage-0',
             [
-              'env',
+              '@babel/env',
               {
                 targets: {
                   browsers: ['last 2 versions']
                 }
               }
-            ]
+            ],
+            '@babel/preset-react'
           ],
-          plugins: ['transform-class-properties']
+          plugins: ['@babel/plugin-proposal-class-properties']
         }
       }
     ]

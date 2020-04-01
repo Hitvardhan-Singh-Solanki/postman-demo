@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import session from 'express-session';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 import apiRoutes from './routes/apiRoutes';
 import mongoConnect from './helpers/mongoConnect';
 import { ORIGIN } from './utils/constants';
@@ -43,10 +44,11 @@ app.use(passport.session());
 // Cookie parser
 app.use(cookieParser());
 app.use(headers);
+app.use(express.static('public'));
 
 app.use('/api', apiRoutes);
 app.get('/', (req, res) => {
-  res.send('Welcome to postman');
+  res.sendFile(path.join(__dirname + 'index.html'));
 });
 const server = socket(app, expressSession);
 server.listen(process.env.PORT, mongoConnect);
