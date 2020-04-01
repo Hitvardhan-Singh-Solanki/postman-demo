@@ -12,11 +12,8 @@ module.exports = {
         exclude: /node_modules/,
         options: {
           presets: [
-            'es2015',
-            'react',
-            'stage-0',
             [
-              'env',
+              '@babel/env',
               {
                 targets: {
                   browsers: ['last 2 versions']
@@ -24,7 +21,7 @@ module.exports = {
               }
             ]
           ],
-          plugins: ['transform-class-properties']
+          plugins: ['@babel/plugin-proposal-class-properties']
         }
       }
     ]
