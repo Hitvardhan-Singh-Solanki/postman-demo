@@ -1,4 +1,6 @@
 import 'babel-polyfill';
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
@@ -6,7 +8,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import apiRoutes from './routes/apiRoutes';
 import mongoConnect from './helpers/mongoConnect';
-import { PORT, ORIGIN, SECRET } from './utils/constants';
+import { ORIGIN } from './utils/constants';
 import passport from 'passport';
 import passportConfig from './config/passport';
 import socket from './config/socket';
@@ -19,7 +21,7 @@ const corsOptions = {
 };
 
 const sessionOptions = {
-  secret: SECRET,
+  secret: process.env.SECRET,
   resave: true,
   saveUninitialized: true
 };
@@ -43,5 +45,8 @@ app.use(cookieParser());
 app.use(headers);
 
 app.use('/api', apiRoutes);
+app.get('/', (req, res) => {
+  res.send('Welcome to postman');
+});
 const server = socket(app, expressSession);
-server.listen(PORT, mongoConnect);
+server.listen(process.env.PORT, mongoConnect);

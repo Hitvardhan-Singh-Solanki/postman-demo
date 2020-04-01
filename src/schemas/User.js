@@ -7,20 +7,24 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  image: { type: String },
+  image: { type: String }
 });
 
 UserSchema.pre('save', function(next) {
   if (this.isNew || this.isModified('password')) {
     const document = this;
-    bcrypt.hash(document.password, saltRounds, (err, hashedPassword) => {
-      if (err) {
-        next(err);
-      } else {
-        document.password = hashedPassword;
-        next();
+    bcrypt.hash(
+      document.password,
+      process.env.SALT_ROUNDS,
+      (err, hashedPassword) => {
+        if (err) {
+          next(err);
+        } else {
+          document.password = hashedPassword;
+          next();
+        }
       }
-    });
+    );
   } else {
     next();
   }
