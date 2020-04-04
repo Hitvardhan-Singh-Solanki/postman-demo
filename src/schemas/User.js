@@ -7,15 +7,15 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  image: { type: String }
+  image: { type: String },
 });
 
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function (next) {
   if (this.isNew || this.isModified('password')) {
     const document = this;
     bcrypt.hash(
       document.password,
-      process.env.SALT_ROUNDS,
+      +process.env.SALT_ROUNDS,
       (err, hashedPassword) => {
         if (err) {
           next(err);
@@ -30,7 +30,7 @@ UserSchema.pre('save', function(next) {
   }
 });
 
-UserSchema.methods.isCorrectPassword = function(password, callback) {
+UserSchema.methods.isCorrectPassword = function (password, callback) {
   bcrypt.compare(password, this.password, (err, same) => {
     if (err) callback(err);
     else callback(err, same);
