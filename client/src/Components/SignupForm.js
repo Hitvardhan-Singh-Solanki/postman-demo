@@ -68,53 +68,60 @@ const SignupForm = ({ history }) => {
   const handleCnfPasswordInputChange = (e) => {
     setCnfPassword(e.target.value);
   };
-  return showError ? (
-    <Error message={errorMsg} />
-  ) : loading ? (
-    <Loader />
-  ) : (
-    <Form onSubmit={setValues}>
-      <Form.Field>
-        <StyledLabel htmlFor="email">Email Address</StyledLabel>
-        <input
-          placeholder=""
-          value={email}
-          id="email"
-          onChange={handleEmailInputChange}
-        />
-      </Form.Field>
-      <Form.Field>
-        <StyledLabel htmlFor="password">Password</StyledLabel>
-        <input
-          placeholder=""
-          id="password"
-          type="password"
-          value={password}
-          onChange={handlePasswordInputChange}
-        />
-      </Form.Field>
-      <Form.Field>
-        <StyledLabel htmlFor="confirm-password">Confirm Password</StyledLabel>
-        <input
-          placeholder=""
-          id="confirm-password"
-          type="password"
-          value={cnfPassword}
-          onChange={handleCnfPasswordInputChange}
-        />
-      </Form.Field>
-      <StyledButton
-        type="submit"
-        primary
-        disabled={
-          password.length < 3 ||
-          email.length < 3 ||
-          cnfPassword.length !== password.length
-        }
-      >
-        Submit
-      </StyledButton>
-    </Form>
+  return (
+    <>
+      <h1>SIGN UP</h1>
+      {showError ? (
+        <Error message={errorMsg} />
+      ) : loading ? (
+        <Loader />
+      ) : (
+        <Form onSubmit={setValues}>
+          <Form.Field>
+            <StyledLabel htmlFor="email">Email Address</StyledLabel>
+            <input
+              placeholder=""
+              value={email}
+              id="email"
+              onChange={handleEmailInputChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <StyledLabel htmlFor="password">Password</StyledLabel>
+            <input
+              placeholder=""
+              id="password"
+              type="password"
+              value={password}
+              onChange={handlePasswordInputChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <StyledLabel htmlFor="confirm-password">
+              Confirm Password
+            </StyledLabel>
+            <input
+              placeholder=""
+              id="confirm-password"
+              type="password"
+              value={cnfPassword}
+              onChange={handleCnfPasswordInputChange}
+            />
+          </Form.Field>
+          <StyledButton
+            type="submit"
+            primary
+            disabled={
+              password.length < 3 ||
+              email.length < 3 ||
+              cnfPassword.length !== password.length
+            }
+          >
+            Submit
+          </StyledButton>
+        </Form>
+      )}
+    </>
   );
 };
 
