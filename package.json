@@ -8,7 +8,7 @@
     "dev:client": "cd client && npm run start",
     "dev:build": "webpack --config webpack.server.js --watch",
     "dev": "npm-run-all --parallel dev:*",
-    "heroku-prebuild": "npm i webpack -g",
+    "heroku-prebuild": "cd client npm i && npm i webpack -g",
     "build:client": "rm -rf dist && mkdir dist && cd client && npm run build && mv  -v build/* ../dist/",
     "build:server": "webpack --config webpack.server.js",
     "build": "npm-run-all --parallel build:*",
