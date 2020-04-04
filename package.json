@@ -9,7 +9,8 @@
     "dev": "npm-run-all --parallel dev:*",
     "heroku-prebuild": "npm i webpack -g",
     "build": "webpack --config webpack.server.js",
-    "start": "node build/bundle.js"
+    "start": "node build/bundle.js",
+    "build:client": "rm -rf dist && mkdir dist && cd client && npm run build && mv  -v build/* ../dist/"
   },
   "author": "",
   "license": "ISC",

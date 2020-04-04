@@ -1,0 +1,12 @@
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
