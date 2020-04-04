@@ -18,13 +18,13 @@ import headers from './middlewares/headers';
 const corsOptions = {
   origin: ORIGIN,
   optionsSuccessStatus: 200,
-  credentials: true
+  credentials: true,
 };
 
 const sessionOptions = {
   secret: process.env.SECRET,
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
 };
 
 // configuring passport
@@ -44,11 +44,14 @@ app.use(passport.session());
 // Cookie parser
 app.use(cookieParser());
 app.use(headers);
-app.use(express.static('public'));
+app.use(express.static('dist'));
 
 app.use('/api', apiRoutes);
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + 'index.html'));
+});
+app.get('*', (req, res) => {
+  res.redirect(301, '/');
 });
 const server = socket(app, expressSession);
 server.listen(process.env.PORT, mongoConnect);

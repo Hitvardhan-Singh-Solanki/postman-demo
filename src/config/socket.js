@@ -9,19 +9,19 @@ const MAIN_ROOM = 'MAIN_ROOM';
 
 export default (expressApp, sessionMiddleware) => {
   const server = http.createServer(expressApp);
-  const io = socketio(server, { serveClient: false });
+  const io = socketio(server);
   io.use((socket, next) => {
     sessionMiddleware(socket.request, {}, next);
-  }).on('connection', socket => {
+  }).on('connection', (socket) => {
     console.log(
       blue(`${startTime()} New client connected`),
       blue.underline.bold(socket.id)
     );
-    socket.on('join', currentUser => {
+    socket.on('join', (currentUser) => {
       socket.join(MAIN_ROOM);
       socket.emit('joined', {
         text: `Welcome to the club!`,
-        ...currentUser
+        ...currentUser,
       });
       addUser({ ...currentUser, socketid: socket.id });
       socket.broadcast.to(MAIN_ROOM).emit('USER_JOINED', { currentUser });
